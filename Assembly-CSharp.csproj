@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{ABA3CFA9-FE99-B112-1AA0-055F70E963FA}</ProjectGuid>
+    <ProjectGuid>{717E2824-97B0-58F9-DAF7-C563F5506C8D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -68,16 +68,16 @@
      <None Include="Assets\Materials\TomoView.shader" />
      <None Include="Assets\Materials\TryAnotherSurface.shader" />
  <Reference Include="UnityEditor.StandardEvents">
- <HintPath>/home/roberta/Fly4K (2)/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+ <HintPath>/home/roberta/Documents/UnityProjects/4Kfly/4Kfly/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro.Editor">
- <HintPath>/home/roberta/Fly4K (2)/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+ <HintPath>/home/roberta/Documents/UnityProjects/4Kfly/4Kfly/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.PackageManagerUI.Editor">
- <HintPath>/home/roberta/Fly4K (2)/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+ <HintPath>/home/roberta/Documents/UnityProjects/4Kfly/4Kfly/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro">
- <HintPath>/home/roberta/Fly4K (2)/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+ <HintPath>/home/roberta/Documents/UnityProjects/4Kfly/4Kfly/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>/home/roberta/Unity-2018.2.7f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
