@@ -53,9 +53,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\MotionControl.cs" />
      <Compile Include="Assets\Scripts\BB.cs" />
      <Compile Include="Assets\Scripts\FlyEyeScript.cs" />
+     <Compile Include="Assets\Scripts\MotionControl.cs" />
      <Compile Include="Assets\Scripts\NetworkingScript.cs" />
      <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
      <Compile Include="Assets\Scripts\Recordator.cs" />
