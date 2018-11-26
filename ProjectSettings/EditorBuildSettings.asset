@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MonitorBees.unity
     guid: 8830e9947202a429e9c21dc74b723157
   - enabled: 1
+    path: Assets/NetworkHUDClient.unity
+    guid: 8778672f55e614f6998cfef0cd064039
+  - enabled: 1
     path: Assets/Scenes/NetworkHUD.unity
     guid: 7fa55472472534be69e7bf3ac90fcd5d
   - enabled: 1

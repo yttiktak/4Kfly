@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/NetworkHUD.unity
+- path: Assets/NetworkHUDClient.unity
   isLoaded: 1
   isActive: 1
