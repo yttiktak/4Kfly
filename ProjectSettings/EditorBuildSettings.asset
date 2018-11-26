@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/MonitorBees.unity
     guid: 8830e9947202a429e9c21dc74b723157
+  - enabled: 0
+    path: Assets/NetworkHUDSolo.unity
+    guid: d5f1af13a6fb042da8287728cb5d488e
   - enabled: 1
     path: Assets/NetworkHUDClient.unity
     guid: 8778672f55e614f6998cfef0cd064039
@@ -26,10 +29,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/InfinityBalls.unity
     guid: 08c794fa3d9004f9784a2c3f6367a7b4
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SingleCam.unity
     guid: a0c78a51463154124aab3282fd0f253b
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/BeeKembra.unity
     guid: 993c01ab3aae84a25b83f1df0347d507
   - enabled: 1
@@ -47,16 +50,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/JuneLeaf.unity
     guid: e75f83aeb4e3d4c1f96e83a3a2687bc4
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/WithFretboards.unity
     guid: c699e29e466c74e93bc12e634a1fb72f
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/JuneToFrank.unity
     guid: 5038e15a2bad640189696c4b87e84dc7
   - enabled: 1
     path: Assets/Scenes/BeeEyeBreadfruit1.unity
     guid: a22e3925fc62b4874acc44875c25db9d
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/FinePitchCalibrator.unity
     guid: 01345c440565543979ff5f08ebdeb19f
   m_configObjects: {}
