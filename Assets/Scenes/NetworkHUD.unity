@@ -767,7 +767,7 @@ MonoBehaviour:
   m_LogLevel: 2
   m_PlayerPrefab: {fileID: 1757839772126378, guid: 907905e7c1b57421294644a72bbaa97c,
     type: 2}
-  m_AutoCreatePlayer: 0
+  m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
   m_OfflineScene: BeeOk
   m_OnlineScene: BeeOk
