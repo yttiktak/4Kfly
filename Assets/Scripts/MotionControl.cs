@@ -9,10 +9,12 @@ public class MotionControl : NetworkBehaviour {
     public bool followCam = false;
     Gyroscope gyr;
     Quaternion originalQ;
+    Quaternion orgBeeQ;
 
     float deltaZ = 0;
 
     void Start() {
+        if (!isLocalPlayer) { return; }
         // if (Input.gyro.enabled) 
         gyr = Input.gyro;
         //Vector3 grav = gyr.gravity;
@@ -27,11 +29,12 @@ public class MotionControl : NetworkBehaviour {
             gyr.enabled = false;
             followCam = false;
         }
+        orgBeeQ = transform.rotation;
     }
 
     public Vector2 startPos;
     public Vector2 direction;
-    public bool directionChosen;
+    public bool directionChosen = false;
 
     void Update() {
         if (!isLocalPlayer) { return; }
@@ -46,10 +49,8 @@ public class MotionControl : NetworkBehaviour {
         if (gyr.enabled)
         {
             Quaternion gq = gyr.attitude;
-            Quaternion grq = gq;
-            grq.x = gq.z; // try to flip round y axis
-            grq.z = gq.x;
-            transform.rotation = grq;
+           // Quaternion grq = Quaternion.Inverse(originalQ) * gq;
+            transform.rotation = gq;
             if (Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);

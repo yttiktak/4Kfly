@@ -14,18 +14,18 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/MonitorBees.unity
     guid: 8830e9947202a429e9c21dc74b723157
-  - enabled: 1
-    path: Assets/NetworkHUDSolo.unity
-    guid: d5f1af13a6fb042da8287728cb5d488e
-  - enabled: 1
+  - enabled: 0
+    path: Assets/Scenes/BeeOK2.unity
+    guid: 137f63ba502e34f63b68e5f40b6e10f0
+  - enabled: 0
     path: Assets/NetworkHUDClient.unity
     guid: 8778672f55e614f6998cfef0cd064039
   - enabled: 0
     path: Assets/Scenes/NetworkHUD.unity
     guid: 7fa55472472534be69e7bf3ac90fcd5d
-  - enabled: 0
-    path: Assets/Scenes/BeeOK2.unity
-    guid: 137f63ba502e34f63b68e5f40b6e10f0
+  - enabled: 1
+    path: Assets/NetworkHUDSolo.unity
+    guid: d5f1af13a6fb042da8287728cb5d488e
   - enabled: 0
     path: Assets/Scenes/InfinityBalls.unity
     guid: 08c794fa3d9004f9784a2c3f6367a7b4
