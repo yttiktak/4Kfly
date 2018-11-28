@@ -49,8 +49,10 @@ public class MotionControl : NetworkBehaviour {
         if (gyr.enabled)
         {
             Quaternion gq = gyr.attitude;
-           // Quaternion grq = Quaternion.Inverse(originalQ) * gq;
-            transform.rotation = gq;
+            Quaternion grq = gq;
+            grq.x = -gq.y;
+            grq.y = gq.x;
+            transform.rotation = grq;
             if (Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
@@ -70,8 +72,8 @@ public class MotionControl : NetworkBehaviour {
             }
             if (directionChosen)
             {
-                transform.Translate(0, 0, - direction.y);
-                direction *= 0.7f;
+                transform.Translate(0, 0, -0.02f * direction.y);
+                direction *= 0.95f;
             }
 
         }
