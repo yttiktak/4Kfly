@@ -32,6 +32,17 @@ public class MotionControl : NetworkBehaviour {
         orgBeeQ = transform.rotation;
     }
 
+    bool playing = false;
+    void OnCollisionEnter(){
+        if (!playing)
+        {
+            GetComponent<AudioSource>().Play();
+        } else {
+            GetComponent<AudioSource>().Stop();
+        }
+        playing = !playing;
+    }
+
     public Vector2 startPos;
     public Vector2 direction;
     public bool directionChosen = false;
