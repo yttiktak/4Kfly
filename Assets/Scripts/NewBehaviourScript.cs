@@ -2,9 +2,12 @@
 // repeatingshadow@protonmail.com
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using UnityEngine.Assertions;
+using UnityEngine.Networking;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -14,7 +17,7 @@ using System.ComponentModel;
 [ExecuteInEditMode]
 public class NewBehaviourScript : MonoBehaviour {
 
-	public BB bb = new BB(); // EGAD, THIS SHOULD BE A SINGLETON.
+	public BB bb = new BB(); // EGAD, THIS SHOULD BE A SINGLETON. JUST A BUNCH OF UTILITY FUNCTIONS FOR MAKING HEX ARRAYS.
 	
 	public Camera thecam;							// camera that is to move to each lens cell position and render
 	public RenderTexture tarTemplate;				// I build a tex2Darray based on this texture. Otherwise not used.
@@ -26,6 +29,7 @@ public class NewBehaviourScript : MonoBehaviour {
 	public float ZOpt = 39;
 	public float ZMag = 14;
 
+	// removing this multi-camera idea from the code piece by piece. Much still in place.
 	public Camera skyboxCam;						// If these cameras are enabled, the fly camera takes settings from each in turn
 	public Camera backgroundCam;					// to render different parts of the scene at different fov values. 
 	public Camera midgroundCam;
@@ -58,6 +62,7 @@ public class NewBehaviourScript : MonoBehaviour {
 	private CommandBuffer commandsAfter;			// Have camera render a view, then xfer to slice in above array via this commandBuffer
 
 	private int nTot; // total number of viewpoints, eg cells
+	static int nMax = 4096;
 
 	private Vector3 cameraPositionZero;
 	private float cameraSetbackDistance = 0.0f;
@@ -69,6 +74,7 @@ public class NewBehaviourScript : MonoBehaviour {
 	private GameObject canvasGO;
 
 	// SWISS ARMY KNIFE. These following take messages from my control panels in the game
+	// kindof obsolete, there are keyboard controlls below these that are in use for the full screen version.
 	public void ChangeScreenCamSize( float news ) {
 		PlaybackScreenCam.orthographicSize = news;
 	}
@@ -143,6 +149,9 @@ public class NewBehaviourScript : MonoBehaviour {
 		MeshRenderer mer = PlaybackScreen.GetComponent<MeshRenderer> ();
 		mer.sharedMaterial.SetFloat("_centripital",news);
 	}
+
+
+
 	public void RecordButtonClick ()
 	{
 		recording = !recording;
@@ -155,6 +164,87 @@ public class NewBehaviourScript : MonoBehaviour {
 		}
 	}
 		
+	void LateUpdate() {
+		Vector3 was; // for load/modify/write 
+		float wasfov;
+		if (Input.anyKey) {
+			if (Input.inputString.Length < 1) {
+				if (Input.GetKey (KeyCode.LeftArrow)) {
+					was = PlaybackScreen.transform.localPosition;
+					was.x -= 0.01f;
+					PlaybackScreen.transform.localPosition = was;
+					Debug.Log ("x y = "+was.x+ " " + was.y);
+				}
+				if (Input.GetKey (KeyCode.RightArrow)) {
+					was = PlaybackScreen.transform.localPosition;
+					was.x += 0.01f;
+					PlaybackScreen.transform.localPosition = was;
+					Debug.Log ("x y = " + was.x + " " + was.y);
+				}
+				if (Input.GetKey (KeyCode.UpArrow)) {
+					was = PlaybackScreen.transform.localPosition;
+					was.y += 0.01f;
+					PlaybackScreen.transform.localPosition = was;
+					Debug.Log ("x y = " + was.x + " " + was.y);
+				}
+				if (Input.GetKey (KeyCode.DownArrow)) {
+					was = PlaybackScreen.transform.localPosition;
+					was.y -= 0.01f;
+					PlaybackScreen.transform.localPosition = was;
+					Debug.Log ("x y = " + was.x + " " + was.y);
+				}
+				return;
+			}
+
+			string inchar = Input.inputString.Substring(0,1);
+			switch (inchar) {
+			case "o":
+				PlaybackScreenCam.orthographicSize += 0.051f;
+				Debug.Log ("orthographic size ="+PlaybackScreenCam.orthographicSize);
+			break;
+			case "l":
+				PlaybackScreenCam.orthographicSize -= 0.051f;
+				Debug.Log ("orthographic size ="+PlaybackScreenCam.orthographicSize);
+			break;
+			case "O":
+				PlaybackScreenCam.orthographicSize += 0.5f;
+				Debug.Log ("orthographic size ="+PlaybackScreenCam.orthographicSize);
+			break;
+			case "L":
+				PlaybackScreenCam.orthographicSize -= 0.5f;
+				Debug.Log ("orthographic size ="+PlaybackScreenCam.orthographicSize);
+			break;
+
+			case "q":
+				wasfov = thecam.fieldOfView;
+				wasfov += 0.51f;
+				thecam.fieldOfView = wasfov;
+				Debug.Log ("fov = " + wasfov);
+			break;
+			case "a":
+				wasfov = thecam.fieldOfView;
+				wasfov -= 0.51f;
+				thecam.fieldOfView = wasfov;	
+				Debug.Log ("fov = " + wasfov);		
+			break;
+			case "Q":
+				wasfov = thecam.fieldOfView;
+				wasfov += 2.51f;
+				thecam.fieldOfView = wasfov;
+				Debug.Log ("fov = " + wasfov);
+			break;
+			case "A":
+				wasfov = thecam.fieldOfView;
+				wasfov -= 2.51f;
+				thecam.fieldOfView = wasfov;
+				Debug.Log ("fov = " + wasfov);;
+			break;
+
+			}// end case
+
+		}//end if input
+	}
+
 	// Commence building the 3D camera
 
 	// First, build the tex2dArray
@@ -168,7 +258,7 @@ public class NewBehaviourScript : MonoBehaviour {
 				tar.Release (); 
 			}
 		}
-		tar = new RenderTexture (tarTemplate); // fails on Ubuntu version. Umm. but not failing on 2017.3
+		tar = new RenderTexture (tarTemplate); 
 		tar.useMipMap = false;
 		tar.dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray; 
 		if (slices < 2048) {
@@ -182,7 +272,7 @@ public class NewBehaviourScript : MonoBehaviour {
 		Shader.SetGlobalTexture ("_my2darray",tar);
 
 		/*** ok, two tars to get past 2040 works. Now make them an array of tars maybe? **/
-		tar1 = new RenderTexture (tarTemplate); // fails on Ubuntu version. Umm. but now not failing on 2017.3
+		tar1 = new RenderTexture (tarTemplate); 
 		tar1.useMipMap = false;
 		tar1.dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray; 
 		if (slices < 2048) {
@@ -202,6 +292,9 @@ public class NewBehaviourScript : MonoBehaviour {
 		if (!pointyPartUp)
 			spacingSign = -1.0f;
 		nT = bb.MakeTranslations (spacingSign * spacing, nWide, nTall, ref translations); 
+
+		Assert.IsTrue (nT < nMax, "only have two 2048 texarrays. N too big");
+
 		// negative spacing flags flatside up cell array.
 		Mesh projectionMesh = new Mesh (); 
 		bb.MakeHexMesh (translations, ref projectionMesh); 
@@ -240,11 +333,33 @@ public class NewBehaviourScript : MonoBehaviour {
 
 		}
 	}
+
+	// GAHHHHHHHHH. OBSOLETE. NO DOCS. MUST LEARN NEW PATH TO NETWORKING. GAHHHHHHHH
+	public int hostId;
+	void SetupNetwork() {
+		string ipaddrs = "*";
+		NetworkTransport.Init();
+		// get the last (or only) IP address
+		IPAddress[] addrs = Dns.GetHostAddresses (Dns.GetHostName ());
+		foreach(IPAddress myip in addrs) {
+			if (myip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) {
+				Debug.Log (myip.ToString ());
+				ipaddrs = myip.ToString ();
+			}
+		}
+		ConnectionConfig config = new ConnectionConfig ();
+		int channelId = config.AddChannel (QosType.Reliable);
+		HostTopology topology = new HostTopology (config, 10);
+		hostId = NetworkTransport.AddHost (topology, 8761, ipaddrs);
+		// need to close port when done. Where? How? Tune in next episode to find out..
+	}
+
 	void Awake () 
 	{			
 
 		cameraSetbackDistance = Vector3.Distance(thecam.transform.parent.position+cameraSetback,cameraPositionZero);
 
+		// I check for this shader even if I have the 'use replacement shader' unchecked. Could not log if, but do.
 		replacementShader = Shader.Find("Custom/ReplacementShader");
 		if (replacementShader == null) {
 			Debug.Log ("Rplcmt not found");
@@ -258,7 +373,7 @@ public class NewBehaviourScript : MonoBehaviour {
 	void Start ()
 	{
 
-		nTot = updateTranslations (); // side effect: reates the global translations array
+		nTot = updateTranslations (); // side effect: creates the global translations array
 		Debug.Log ("n cells " + nTot);
 		MakeTex2DArrayFromCameraTarget (nTot);
 
@@ -269,6 +384,7 @@ public class NewBehaviourScript : MonoBehaviour {
 		cameraPositionZero = thecam.transform.position;
 		cameraSetbackDistance = Vector3.Distance(thecam.transform.parent.position+cameraSetback,cameraPositionZero);
 
+		// bloom z collapse not implemented yet. Code lies in wait..
 		taggedToBloom = GameObject.FindGameObjectsWithTag ("Bloom");
 		bloomScales = new Vector3[taggedToBloom.Length];
 		bloomSpots = new float[taggedToBloom.Length];
@@ -279,8 +395,10 @@ public class NewBehaviourScript : MonoBehaviour {
 
 		canvasGO = GameObject.Find ("Canvas"); // so I can turn off controlls when recording
 
+		// SetupNetwork();
 	}
 
+	// IS THIS SENSE?? DOESNT IT DESTROY TEXTURE ARRAY (TAR) WHEN I CHANGE SCENES?? seems to work ok tho..
 	void OnDestroy() {
 		if (tar != null) {
 			tar.Release ();
@@ -294,10 +412,10 @@ public class NewBehaviourScript : MonoBehaviour {
 
 	void OnValidate () // what to do if params change, like number of clipzones
 	{
-		Shader.SetGlobalFloat("_ZOpt", ZOpt);
+		Shader.SetGlobalFloat("_ZOpt", ZOpt); // replacement shader, if used, makes use of these.
 		Shader.SetGlobalFloat("_ZMag", ZMag);
 	}
-
+		
 	void Update ()
 	{
 		// apply bloom to objects tagged for Bloom
@@ -330,68 +448,20 @@ public class NewBehaviourScript : MonoBehaviour {
 		//	For each position in the lens array go there and take a picture
 		// putting it all into tar, the array of viewws from each lenslet position.
 
-		for (int i = 0; i < nTot; i++) {
-			// put camera at position
-			thecam.transform.localPosition = translations [i] - cameraSetback;
-			// Dependent on Eulers being zero to start, and translations in xy, and small angles. 
-			thecam.transform.localEulerAngles = new Vector3 (translations [i].y, -translations [i].x, 0f) * toeIn;
+		for (int i = 0; i < nTot; i ++) {
+
+			thecam.transform.localPosition = translations [i] - cameraSetback;			// put camera at position
+			thecam.transform.localEulerAngles = new Vector3 (translations [i].y, -translations [i].x, 0f) * toeIn;		// Dependent on Eulers being zero to start, and translations in xy, and small angles. 
 
 			commandsAfter.Clear ();
 
-		
-			if (skyboxCam && skyboxCam.enabled) {
-				thecam.clearFlags = skyboxCam.clearFlags; // CameraClearFlags.Skybox;
-				thecam.fieldOfView = skyboxCam.fieldOfView;
-			//	thecam.nearClipPlane = backgroundCam.farClipPlane + 100.0f;
-				thecam.farClipPlane = backgroundCam.farClipPlane + 100.1f;
-				thecam.depth = skyboxCam.depth;
-				thecam.Render ();
-				thecam.clearFlags = CameraClearFlags.Nothing;
-			//	thecam.RenderWithShader(replacementShader, "");
-			} else {
-				// thecam.clearFlags = CameraClearFlags.Color;
-			}
-			/** REMOVED FOR LOOP OPTIMIZING. CONSIDER UNWRAPPING THE IF/THEN INTO MULTIPLE FOR LOOPS
-			if (backgroundCam && backgroundCam.enabled) {
-				thecam.fieldOfView = backgroundCam.fieldOfView;
-				thecam.farClipPlane = backgroundCam.farClipPlane;
-				thecam.nearClipPlane = backgroundCam.nearClipPlane;
-				thecam.depth = backgroundCam.depth;
-
-				if (useReplacementShader) {
-					thecam.RenderWithShader (replacementShader, "");
-				} else {
-					thecam.Render ();
-				}
-				thecam.clearFlags = CameraClearFlags.Nothing;
-			}
-
-			if (midgroundCam && midgroundCam.enabled) {
-				thecam.fieldOfView = midgroundCam.fieldOfView;
-				thecam.farClipPlane = midgroundCam.farClipPlane + cameraSetbackDistance;
-				thecam.nearClipPlane = midgroundCam.nearClipPlane + cameraSetbackDistance;
-				thecam.depth = midgroundCam.depth;
-				if (useReplacementShader) {
-					thecam.RenderWithShader (replacementShader, "");
-				} else {
-					thecam.Render ();
-				}
-				thecam.clearFlags = CameraClearFlags.Nothing;
-			}
-**/
-			// WILL FAIL AT I > 4096
+			// WILL FAIL AT I > 4096. Assertion is in updateTranslations
 			if (i < 2048) {
 				commandsAfter.CopyTexture (BuiltinRenderTextureType.CameraTarget, 0, tar, i); 
 			} else {
 				commandsAfter.CopyTexture (BuiltinRenderTextureType.CameraTarget, 0, tar1, i - 2048);	
 			}
 
-	//		if (foregroundCam && foregroundCam.enabled) {
-				thecam.fieldOfView = foregroundCam.fieldOfView;
-				thecam.farClipPlane = foregroundCam.farClipPlane + cameraSetbackDistance;
-			//	thecam.nearClipPlane = foregroundCam.nearClipPlane + cameraSetbackDistance;
-				thecam.depth = foregroundCam.depth;
-	//		}
 			if (useReplacementShader) {
 				thecam.RenderWithShader (replacementShader, "");
 			} else {
@@ -399,7 +469,7 @@ public class NewBehaviourScript : MonoBehaviour {
 			}
 
 		}
-
+			
 		// restore camera position, just 'cause.
 		thecam.transform.localPosition = Vector3.zero;
 		thecam.transform.LookAt (2.0f * thecam.transform.position - viewingPersonsPosition.transform.position);
@@ -420,4 +490,8 @@ public class NewBehaviourScript : MonoBehaviour {
 		}
 
 	}// end Update
+
+	void OnApplicationQuit(){
+
+	}
 }
