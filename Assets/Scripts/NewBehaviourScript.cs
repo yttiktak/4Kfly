@@ -14,7 +14,7 @@ using UnityEditor;
 using System.ComponentModel;
 
 
-[ExecuteInEditMode]
+
 public class NewBehaviourScript : MonoBehaviour {
 
 	public BB bb = new BB(); // EGAD, THIS SHOULD BE A SINGLETON. JUST A BUNCH OF UTILITY FUNCTIONS FOR MAKING HEX ARRAYS.
@@ -35,7 +35,8 @@ public class NewBehaviourScript : MonoBehaviour {
 	public Camera midgroundCam;
 	public Camera foregroundCam;
 
-	private bool recording = false; // hard wired, do not use
+	private bool recording = false; // hard wired, use with caution
+	private bool paused = false;
 
 	public GameObject PlaybackScreen;				// The mosaic fly-image is painted onto this screen.
 	public Camera PlaybackScreenCam;				// And observed by this camera, which renders to the final 4K screen.
@@ -49,9 +50,13 @@ public class NewBehaviourScript : MonoBehaviour {
 
 	public float bloomDistance = 10.0f;				// Asset blooming (big when close, small when far) is not totally set up.
 
+	// public string recordPath = "/media/roberta/Seagate1/RecordedFromSlatherpi";
+
 	//	private float screenDPI;
 	public bool useReplacementShader = true;
 	Shader replacementShader = null;
+
+	public string recordPath = "";
 
 	// I maintain a lot of stuff as global. Makes for a few side-effect procs.
 	private Vector3[] translations; // array of virtual camera positions, and hex cell positions.
@@ -71,7 +76,7 @@ public class NewBehaviourScript : MonoBehaviour {
 	private Vector3[] bloomScales; 			// track starting scale of each GameObject tagged with 'bloom. Use w to track z too.'
 	private float[] bloomSpots;				// and distance to camera at starting point.
 
-	private GameObject canvasGO;
+//	private GameObject canvasGO;
 
 	// SWISS ARMY KNIFE. These following take messages from my control panels in the game
 	// kindof obsolete, there are keyboard controlls below these that are in use for the full screen version.
@@ -156,7 +161,7 @@ public class NewBehaviourScript : MonoBehaviour {
 	{
 		recording = !recording;
 		if (recording) {
-			canvasGO.SetActive (false);
+		//	canvasGO.SetActive (false);
 			Debug.Log ("recording");
 			Time.captureFramerate = 12;
 		} else {
@@ -167,6 +172,33 @@ public class NewBehaviourScript : MonoBehaviour {
 	void LateUpdate() {
 		Vector3 was; // for load/modify/write 
 		float wasfov;
+		if (Input.GetKeyDown (KeyCode.Question)) {
+			Debug.Log ("R record, P pause, N next scene, o/l lens size, q/a fov, arrow keys move lens");
+		}
+		// R record, P pause, N next scene, o/l lens size, q/a fov, arrow keys move lens
+		if (Input.GetKeyDown (KeyCode.R)) {
+			RecordButtonClick ();
+		}
+		if (Input.GetKeyDown (KeyCode.P)) {
+			if (paused) {
+				Time.timeScale = 1;
+			} else {
+				Time.timeScale = 0;
+			}
+			paused = !paused;
+		}
+		if (Input.GetKeyDown (KeyCode.N)) {
+			int levelsInBuild = SceneManager.sceneCountInBuildSettings;
+			Scene nowAtScene = SceneManager.GetActiveScene();
+			int thisLevel = nowAtScene.buildIndex;
+			int gotolevel = 0;
+			if ((thisLevel < 0) || (thisLevel == levelsInBuild - 1)) {
+				gotolevel = 0;
+			} else {
+				gotolevel = thisLevel + 1;
+			}
+			SceneManager.LoadScene(gotolevel);
+		}
 		if (Input.anyKey) {
 			if (Input.inputString.Length < 1) {
 				if (Input.GetKey (KeyCode.LeftArrow)) {
@@ -393,7 +425,7 @@ public class NewBehaviourScript : MonoBehaviour {
 			bloomSpots[gob] = Vector3.Distance(taggedToBloom[gob].transform.position,thecam.transform.position);
 		}
 
-		canvasGO = GameObject.Find ("Canvas"); // so I can turn off controlls when recording
+	//	canvasGO = GameObject.Find ("Canvas"); // so I can turn off controlls when recording
 
 		// SetupNetwork();
 	}
@@ -475,7 +507,7 @@ public class NewBehaviourScript : MonoBehaviour {
 		thecam.transform.LookAt (2.0f * thecam.transform.position - viewingPersonsPosition.transform.position);
 
 		if (recording) {
-			string name = string.Format("{0}/{1:D04}fly.png", "/media/roberta/Seagate1/RecordedFromSlatherpi", Time.frameCount);
+			string name = string.Format("{0}/{1:D04}fly.png", recordPath, Time.frameCount);
        		 ScreenCapture.CaptureScreenshot(name);
 		}
 
@@ -485,7 +517,7 @@ public class NewBehaviourScript : MonoBehaviour {
 		if (Input.GetKey (KeyCode.Space)) {
 			if (recording) {
 				recording = false;
-				canvasGO.SetActive (true);
+				//canvasGO.SetActive (true);
 			}
 		}
 
