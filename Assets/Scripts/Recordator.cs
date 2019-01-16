@@ -4,6 +4,13 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+/***
+ * Recordator attaches to a handy persistent canvas. Its job is to find all sliders in all scenes
+ * and record or set their values. 
+ * 
+ * 
+ * 
+***/
 
 public class SerializableDictionary<TKey,TValue> : SortedDictionary<TKey,TValue>,ISerializationCallbackReceiver
 {
@@ -41,18 +48,29 @@ public class Recordator : MonoBehaviour {
     //  public static SortedDictionary<string,float> settingsDictionary;
     public static DictionaryOfStringAndFloat settingsDictionary;
 
-	private static string settingFilePath =  "/settingForFly4k.txt";
+	private static string settingFilePath =  "/settingFor4Kfly.txt";
 	private string persistentDataPath;
 
-	// EXPECTING MESSAGES SENT HERE FROM SceneSelectorCanvasScript
+	Slider[] sliders; 
+	int SizeSI;			// Rather than build yet another dictionary to track wich slider has which name, just
+	int XSI;			// track each one I want to use vie keyboard. 
+	int YSI;
+	int ZSI;
+	int ASI;
+	int TiltSI;
+	int ForegroundSI;
+	int ToeSI;
+
+	// EXPECTING MESSAGES SENT HERE FROM PersistSceneSelectorCanvasScript
 	void CopyInto( ) {
 		string sceneName = SceneManager.GetActiveScene ().name;
 		string fullName;
-		Slider[] sliders = GameObject.FindObjectsOfType<Slider> ();
-		foreach (Slider slide in sliders) {
+		sliders = GameObject.FindObjectsOfType<Slider> ();
+		for (int i = 0; i < sliders.Length; i++) {
+			Slider slide = sliders [i];
 			fullName = sceneName + "-" + slide.name;
-			if (settingsDictionary.ContainsKey(fullName)) {
-				settingsDictionary.Remove(fullName);
+			if (settingsDictionary.ContainsKey (fullName)) {
+				settingsDictionary.Remove (fullName);
 			} 
 			settingsDictionary.Add (fullName, slide.value);
 		}
@@ -74,8 +92,9 @@ public class Recordator : MonoBehaviour {
 
 	void SetSliderValues(string sceneName ) {
 		string fullName;
-		Slider[] sliders = GameObject.FindObjectsOfType<Slider> ();
-		foreach (Slider slide in sliders) {
+		sliders = GameObject.FindObjectsOfType<Slider> ();
+		for (int i = 0; i < sliders.Length; i++) {
+			Slider slide = sliders [i];
 			fullName = sceneName + "-" + slide.name;
 			if (settingsDictionary.ContainsKey (fullName)) {
 				Debug.Log ("Set " + fullName);
@@ -84,6 +103,26 @@ public class Recordator : MonoBehaviour {
 				Debug.Log ("Add " + fullName);
 				settingsDictionary.Add (fullName, slide.value);
 			}
+			Debug.Log ("setting index of slider named " + slide.name);
+			switch (slide.name) {
+			case "Size":
+				SizeSI = i;
+				break;
+			case "X":
+				XSI = i;
+				break;
+			case "Y":
+				YSI = i;
+				break;
+			case "Foreground":
+				ForegroundSI = i;
+				break;
+			case "Z":
+				ZSI = i;
+				break;
+			}
+
+
 		}
 	}
 
@@ -118,9 +157,87 @@ public class Recordator : MonoBehaviour {
 		}
 
 	}
-	void Update() {
 
+	void Update() {
+		Vector3 was;
+		if (Input.anyKey) {
+			if (Input.GetKey (KeyCode.LeftArrow)) {
+				sliders [XSI].value -= 0.01f;
+				Debug.Log ("X " + sliders [XSI].value + " Y:" + sliders [YSI].value);
+			}
+			if (Input.GetKey (KeyCode.RightArrow)) {
+				sliders [XSI].value += 0.01f;
+				Debug.Log ("X " + sliders [XSI].value + " Y:" + sliders [YSI].value);
+			}
+			if (Input.GetKey (KeyCode.UpArrow)) {
+				sliders [YSI].value += 0.01f;
+				Debug.Log ("X " + sliders [XSI].value + " Y:" + sliders [YSI].value);
+			}
+			if (Input.GetKey (KeyCode.DownArrow)) {
+				sliders [YSI].value -= 0.01f;
+				Debug.Log ("X " + sliders [XSI].value + " Y:" + sliders [YSI].value);
+			}
+			if (Input.inputString.Length < 1) {
+				return;
+			}
+		string inchar = Input.inputString.Substring(0,1);
+		switch (inchar) {
+		case "o":
+			sliders [SizeSI].value += 0.05f;
+			Debug.Log ("orthographic size ="+sliders [SizeSI].value);
+			Debug.Log ("slider named " + sliders [SizeSI].name + "changed");
+		break;
+		case "l":
+			sliders [SizeSI].value -= 0.05f;
+			Debug.Log ("orthographic size ="+sliders [SizeSI].value);
+		break;
+		case "O":
+			sliders [SizeSI].value += 0.5f;
+			Debug.Log ("orthographic size ="+sliders [SizeSI].value);
+		break;
+		case "L":
+			sliders [SizeSI].value -= 0.5f;
+			Debug.Log ("orthographic size ="+sliders [SizeSI].value);
+		break;
+
+			case "q":
+				sliders [ForegroundSI].value += 0.2f;
+				Debug.Log("fov " + sliders [ForegroundSI].value);
+			break;
+			case "a":
+				sliders [ForegroundSI].value -= 0.2f;
+				Debug.Log("fov " + sliders [ForegroundSI].value);
+			break;
+			case "Q":
+				sliders [ForegroundSI].value += 2.0f;
+				Debug.Log("fov " + sliders [ForegroundSI].value);
+			break;
+			case "A":
+				sliders [ForegroundSI].value -= 2.0f;
+				Debug.Log("fov " + sliders [ForegroundSI].value);
+			break;
+
+			case "z":
+				sliders [ZSI].value += 1.0f;
+				Debug.Log("Z " + sliders [ZSI].value);
+			break;
+			case "x":
+				sliders [ZSI].value -= 1.0f;
+				Debug.Log("Z " + sliders [ZSI].value);
+			break;
+			case "Z":
+				sliders [ZSI].value += 10.0f;
+				Debug.Log("Z " + sliders [ZSI].value);
+			break;
+			case "X":
+				sliders [ZSI].value -= 10.0f;
+				Debug.Log("Z " + sliders [ZSI].value);
+			break;
+
+		}// end case
+		}// end if anykey
 	}
+
 	void OnDisable() {
 
 		SceneManager.sceneLoaded -= OnSceneLoaded;

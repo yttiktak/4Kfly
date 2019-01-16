@@ -2,6 +2,7 @@
 // repeatingshadow@protonmail.com
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -57,6 +58,7 @@ public class NewBehaviourScript : MonoBehaviour {
 	Shader replacementShader = null;
 
 	public string recordPath = "";
+	public bool stopMesh = false;
 
 	// I maintain a lot of stuff as global. Makes for a few side-effect procs.
 	private Vector3[] translations; // array of virtual camera positions, and hex cell positions.
@@ -136,6 +138,7 @@ public class NewBehaviourScript : MonoBehaviour {
 			midgroundCam.fieldOfView = news;
 		}
 	}
+	bool newFov = true;
 	public void ChangeFGCamFOV (float news)
 	{
 		if ((foregroundCam) && (foregroundCam.enabled)) {
@@ -143,6 +146,7 @@ public class NewBehaviourScript : MonoBehaviour {
 		} else {
 			thecam.fieldOfView = news;
 		}
+		newFov = true;
 	}
 	public void changeShaderK2(float news) 
 	{
@@ -154,7 +158,12 @@ public class NewBehaviourScript : MonoBehaviour {
 		MeshRenderer mer = PlaybackScreen.GetComponent<MeshRenderer> ();
 		mer.sharedMaterial.SetFloat("_centripital",news);
 	}
-
+	bool calibrate = false;
+	public void toggleCalibrate( ) {
+		MeshRenderer mer = PlaybackScreen.GetComponent<MeshRenderer> ();
+		calibrate = !calibrate;
+		mer.sharedMaterial.SetInt("_calibrate",calibrate?1:0);
+	}
 
 
 	public void RecordButtonClick ()
@@ -162,6 +171,10 @@ public class NewBehaviourScript : MonoBehaviour {
 		recording = !recording;
 		if (recording) {
 		//	canvasGO.SetActive (false);
+			if (!Directory.Exists (recordPath)) {
+				Debug.Log ("directory for recording not there. Trying to create it");
+				Directory.CreateDirectory (recordPath);
+			}
 			Debug.Log ("recording");
 			Time.captureFramerate = 12;
 		} else {
@@ -199,7 +212,9 @@ public class NewBehaviourScript : MonoBehaviour {
 			}
 			SceneManager.LoadScene(gotolevel);
 		}
+		/*** moved to Recordator
 		if (Input.anyKey) {
+
 			if (Input.inputString.Length < 1) {
 				if (Input.GetKey (KeyCode.LeftArrow)) {
 					was = PlaybackScreen.transform.localPosition;
@@ -275,6 +290,7 @@ public class NewBehaviourScript : MonoBehaviour {
 			}// end case
 
 		}//end if input
+		**/
 	}
 
 	// Commence building the 3D camera
@@ -316,7 +332,7 @@ public class NewBehaviourScript : MonoBehaviour {
 		Shader.SetGlobalTexture ("_my2darray1",tar1);
         /*** another day for the tar array array ***/
 	}
-
+		
 	int updateTranslations ()
 	{
 		int nT; // becomes nTot
@@ -348,8 +364,7 @@ public class NewBehaviourScript : MonoBehaviour {
 
 		return nT;
 	}
-
-
+		
 	void OnDrawGizmos ()
 	{
 		// draw four corners of virtual camera array to show the field of views
@@ -401,7 +416,7 @@ public class NewBehaviourScript : MonoBehaviour {
 		}
 
 	}
-
+		
 	void Start ()
 	{
 
@@ -417,6 +432,8 @@ public class NewBehaviourScript : MonoBehaviour {
 		cameraSetbackDistance = Vector3.Distance(thecam.transform.parent.position+cameraSetback,cameraPositionZero);
 
 		// bloom z collapse not implemented yet. Code lies in wait..
+		// There is a VERY limited distance range for objects, similar to 'depth of field'. We can get arround that
+		// by making objects that should be closer to the camera actually just get larger. And if far, smaller.
 		taggedToBloom = GameObject.FindGameObjectsWithTag ("Bloom");
 		bloomScales = new Vector3[taggedToBloom.Length];
 		bloomSpots = new float[taggedToBloom.Length];
@@ -480,26 +497,29 @@ public class NewBehaviourScript : MonoBehaviour {
 		//	For each position in the lens array go there and take a picture
 		// putting it all into tar, the array of viewws from each lenslet position.
 
-		for (int i = 0; i < nTot; i ++) {
+		if ((!stopMesh) || (newFov)) {
+			newFov = false;
+			for (int i = 0; i < nTot; i++) {
 
-			thecam.transform.localPosition = translations [i] - cameraSetback;			// put camera at position
-			thecam.transform.localEulerAngles = new Vector3 (translations [i].y, -translations [i].x, 0f) * toeIn;		// Dependent on Eulers being zero to start, and translations in xy, and small angles. 
+				thecam.transform.localPosition = translations [i] - cameraSetback;			// put camera at position
+				thecam.transform.localEulerAngles = new Vector3 (translations [i].y, -translations [i].x, 0f) * toeIn;		// Dependent on Eulers being zero to start, and translations in xy, and small angles. 
 
-			commandsAfter.Clear ();
+				commandsAfter.Clear ();
 
-			// WILL FAIL AT I > 4096. Assertion is in updateTranslations
-			if (i < 2048) {
-				commandsAfter.CopyTexture (BuiltinRenderTextureType.CameraTarget, 0, tar, i); 
-			} else {
-				commandsAfter.CopyTexture (BuiltinRenderTextureType.CameraTarget, 0, tar1, i - 2048);	
+				// WILL FAIL AT I > 4096. Assertion is in updateTranslations
+				if (i < 2048) {
+					commandsAfter.CopyTexture (BuiltinRenderTextureType.CameraTarget, 0, tar, i); 
+				} else {
+					commandsAfter.CopyTexture (BuiltinRenderTextureType.CameraTarget, 0, tar1, i - 2048);	
+				}
+
+				if (useReplacementShader) {
+					thecam.RenderWithShader (replacementShader, "");
+				} else {
+					thecam.Render ();
+				}
+
 			}
-
-			if (useReplacementShader) {
-				thecam.RenderWithShader (replacementShader, "");
-			} else {
-				thecam.Render ();
-			}
-
 		}
 			
 		// restore camera position, just 'cause.
@@ -519,6 +539,18 @@ public class NewBehaviourScript : MonoBehaviour {
 				recording = false;
 				//canvasGO.SetActive (true);
 			}
+		}
+		if (Input.GetKey (KeyCode.M)) {
+			stopMesh = !stopMesh;
+			paused = stopMesh;
+			if (paused) {
+				Time.timeScale = 1;
+			} else {
+				Time.timeScale = 0;
+			}
+		}
+		if (Input.GetKey (KeyCode.C)) {
+			toggleCalibrate ();
 		}
 
 	}// end Update

@@ -54,18 +54,23 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\BB.cs" />
+     <Compile Include="Assets\Scripts\Burble.cs" />
+     <Compile Include="Assets\Scripts\Enumerate.cs" />
      <Compile Include="Assets\Scripts\FlyEyeScript.cs" />
      <Compile Include="Assets\Scripts\MotionControl.cs" />
      <Compile Include="Assets\Scripts\NetworkingScript.cs" />
      <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
+     <Compile Include="Assets\Scripts\PersistSceneSelectorCanvas.cs" />
      <Compile Include="Assets\Scripts\Recordator.cs" />
      <Compile Include="Assets\Scripts\ReplaceShader.cs" />
-     <Compile Include="Assets\Scripts\SceneSelectorCanvasScript.cs" />
+     <Compile Include="Assets\Scripts\Vibrate.cs" />
+     <None Include="Assets\Materials\TangentWalking.shader" />
+     <None Include="Assets\Materials\NewSurfaceShader.shader" />
      <None Include="Assets\Materials\ReplacementShader.shader" />
      <None Include="Assets\Materials\UnlitShader.shader" />
-     <None Include="Assets\PlainPlaneFlow\TomoView.shader" />
      <None Include="Assets\Resources\ReplacementShader.shader" />
      <None Include="Assets\Materials\TomoView.shader" />
+     <None Include="Assets\Materials\NewUnlitShader.shader" />
      <None Include="Assets\Materials\TryAnotherSurface.shader" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>/home/roberta/Documents/4Kfly/4Kfly/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
