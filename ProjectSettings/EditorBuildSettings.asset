@@ -39,7 +39,7 @@ EditorBuildSettings:
     path: Assets/Scenes/BeeKembra.unity
     guid: 993c01ab3aae84a25b83f1df0347d507
   - enabled: 0
-    path: Assets/Scenes/FinePitchTwo.unity
+    path: Assets/Scenes/FinePitch/FinePitchTwo.unity
     guid: 9302400b88f76403bbc25f4c7944d679
   - enabled: 0
     path: Assets/Scenes/BeeokMerge1.unity
@@ -63,12 +63,12 @@ EditorBuildSettings:
     path: Assets/Scenes/BeeEyeBreadfruit1.unity
     guid: a22e3925fc62b4874acc44875c25db9d
   - enabled: 0
-    path: Assets/Scenes/FinePitchCalibrator.unity
+    path: Assets/Scenes/FinePitch/FinePitchCalibrator.unity
     guid: 01345c440565543979ff5f08ebdeb19f
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/FullScreenScenes/FullBees.unity
     guid: b6b9144e55aac4c3aa6094db4fc23187
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/FullScreenScenes/FullFrank.unity
     guid: bc77233d3be1b4633acb9ba39226615f
   - enabled: 0
@@ -77,13 +77,19 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/FullScreenScenes/Calibrate.unity
     guid: 0c3a2a1373b7749e5949fd84d42b2b1f
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/FullScreenScenes/MoleculefLAT.unity
     guid: 4aad94369376a42128194b4ba0944ba6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/FullScreenScenes/MoleculeFullFlat.unity
     guid: 0e6fc760bbdba47ea9f78222a165394d
   - enabled: 0
     path: Assets/Scenes/FullScreenScenes/MoleculeMovie.unity
     guid: 3a1a07067636f41afa9ae6672ce6c1a4
+  - enabled: 1
+    path: Assets/Scenes/FinePitch/FinePitchMolecule.unity
+    guid: 53f365e9ddd33419fba3997c9da6dc6b
+  - enabled: 1
+    path: Assets/Scenes/FinePitch/FinePitchTwoX.unity
+    guid: 15c7c9ba8aead4cc480cfb24075178b3
   m_configObjects: {}

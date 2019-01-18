@@ -109,6 +109,9 @@ public class NewBehaviourScript : MonoBehaviour {
 	public void ChangeFlyCamZ( float news ) {
 		cameraSetback.z = news;
 	}
+	public void ChangeFlyCamX( float news ) {
+		cameraSetback.x = news;
+	}
 	public void ChangeToein( float news ) {
 		toeIn = news;
 	}
@@ -317,7 +320,9 @@ public class NewBehaviourScript : MonoBehaviour {
 	//	tar.enableRandomWrite = false; // for some depth buffer image map idea. not needed normally
 		tar.Create ();
 
-		Shader.SetGlobalTexture ("_my2darray",tar);
+		//Shader.SetGlobalTexture ("_my2darray",tar);
+		MeshRenderer mer = PlaybackScreen.GetComponent<MeshRenderer> ();
+		mer.material.SetTexture ("_my2darray", tar);
 
 		/*** ok, two tars to get past 2040 works. Now make them an array of tars maybe? **/
 		tar1 = new RenderTexture (tarTemplate); 
@@ -329,7 +334,8 @@ public class NewBehaviourScript : MonoBehaviour {
 			tar1.volumeDepth = slices-2048; // max is 2048!
 		}
 		tar1.Create ();
-		Shader.SetGlobalTexture ("_my2darray1",tar1);
+	//	Shader.SetGlobalTexture ("_my2darray1",tar1);
+		mer.material.SetTexture ("_my2darray1", tar1);
         /*** another day for the tar array array ***/
 	}
 		

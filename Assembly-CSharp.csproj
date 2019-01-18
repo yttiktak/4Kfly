@@ -67,7 +67,8 @@
      <None Include="Assets\Materials\TangentWalking.shader" />
      <None Include="Assets\Materials\NewSurfaceShader.shader" />
      <None Include="Assets\Materials\ReplacementShader.shader" />
-     <None Include="Assets\Materials\UnlitShader.shader" />
+     <None Include="Assets\Materials\Mosaic_Defaut.shader" />
+     <None Include="Assets\Materials\Mosaic_Right.shader" />
      <None Include="Assets\Resources\ReplacementShader.shader" />
      <None Include="Assets\Materials\TomoView.shader" />
      <None Include="Assets\Materials\NewUnlitShader.shader" />
