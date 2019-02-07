@@ -109,7 +109,7 @@ public class NewBehaviourScript : MonoBehaviour {
 	public void ChangeFlyCamZ( float news ) {
 		cameraSetback.z = news;
 	}
-	public void ChangeFlyCamX( float news ) {
+	public void ChangeFlyCamX( float news ) { // setback is also used to change camera position for different mosaic taking lens positions
 		cameraSetback.x = news;
 	}
 	public void ChangeToein( float news ) {
@@ -162,10 +162,14 @@ public class NewBehaviourScript : MonoBehaviour {
 		mer.sharedMaterial.SetFloat("_centripital",news);
 	}
 	bool calibrate = false;
+	GameObject theatre;
 	public void toggleCalibrate( ) {
 		MeshRenderer mer = PlaybackScreen.GetComponent<MeshRenderer> ();
 		calibrate = !calibrate;
 		mer.sharedMaterial.SetInt("_calibrate",calibrate?1:0);
+		if (theatre != null) {
+			theatre.SetActive (!calibrate);
+		}
 	}
 
 
@@ -178,13 +182,13 @@ public class NewBehaviourScript : MonoBehaviour {
 				Debug.Log ("directory for recording not there. Trying to create it");
 				Directory.CreateDirectory (recordPath);
 			}
-			Debug.Log ("recording");
-			Time.captureFramerate = 12;
+			Debug.Log ("recording at 24 fps");
+			Time.captureFramerate = 24;
 		} else {
 			Debug.Log ("not recording");
 		}
 	}
-		
+
 	void LateUpdate() {
 		Vector3 was; // for load/modify/write 
 		float wasfov;
@@ -215,85 +219,6 @@ public class NewBehaviourScript : MonoBehaviour {
 			}
 			SceneManager.LoadScene(gotolevel);
 		}
-		/*** moved to Recordator
-		if (Input.anyKey) {
-
-			if (Input.inputString.Length < 1) {
-				if (Input.GetKey (KeyCode.LeftArrow)) {
-					was = PlaybackScreen.transform.localPosition;
-					was.x -= 0.01f;
-					PlaybackScreen.transform.localPosition = was;
-					Debug.Log ("x y = "+was.x+ " " + was.y);
-				}
-				if (Input.GetKey (KeyCode.RightArrow)) {
-					was = PlaybackScreen.transform.localPosition;
-					was.x += 0.01f;
-					PlaybackScreen.transform.localPosition = was;
-					Debug.Log ("x y = " + was.x + " " + was.y);
-				}
-				if (Input.GetKey (KeyCode.UpArrow)) {
-					was = PlaybackScreen.transform.localPosition;
-					was.y += 0.01f;
-					PlaybackScreen.transform.localPosition = was;
-					Debug.Log ("x y = " + was.x + " " + was.y);
-				}
-				if (Input.GetKey (KeyCode.DownArrow)) {
-					was = PlaybackScreen.transform.localPosition;
-					was.y -= 0.01f;
-					PlaybackScreen.transform.localPosition = was;
-					Debug.Log ("x y = " + was.x + " " + was.y);
-				}
-				return;
-			}
-
-			string inchar = Input.inputString.Substring(0,1);
-			switch (inchar) {
-			case "o":
-				PlaybackScreenCam.orthographicSize += 0.051f;
-				Debug.Log ("orthographic size ="+PlaybackScreenCam.orthographicSize);
-			break;
-			case "l":
-				PlaybackScreenCam.orthographicSize -= 0.051f;
-				Debug.Log ("orthographic size ="+PlaybackScreenCam.orthographicSize);
-			break;
-			case "O":
-				PlaybackScreenCam.orthographicSize += 0.5f;
-				Debug.Log ("orthographic size ="+PlaybackScreenCam.orthographicSize);
-			break;
-			case "L":
-				PlaybackScreenCam.orthographicSize -= 0.5f;
-				Debug.Log ("orthographic size ="+PlaybackScreenCam.orthographicSize);
-			break;
-
-			case "q":
-				wasfov = thecam.fieldOfView;
-				wasfov += 0.51f;
-				thecam.fieldOfView = wasfov;
-				Debug.Log ("fov = " + wasfov);
-			break;
-			case "a":
-				wasfov = thecam.fieldOfView;
-				wasfov -= 0.51f;
-				thecam.fieldOfView = wasfov;	
-				Debug.Log ("fov = " + wasfov);		
-			break;
-			case "Q":
-				wasfov = thecam.fieldOfView;
-				wasfov += 2.51f;
-				thecam.fieldOfView = wasfov;
-				Debug.Log ("fov = " + wasfov);
-			break;
-			case "A":
-				wasfov = thecam.fieldOfView;
-				wasfov -= 2.51f;
-				thecam.fieldOfView = wasfov;
-				Debug.Log ("fov = " + wasfov);;
-			break;
-
-			}// end case
-
-		}//end if input
-		**/
 	}
 
 	// Commence building the 3D camera
@@ -375,7 +300,6 @@ public class NewBehaviourScript : MonoBehaviour {
 	{
 		// draw four corners of virtual camera array to show the field of views
 		// DrawFrustum methods seem to be in-correct. Frustrating.
-
 		if  (drawMyGizmos) {
 			Gizmos.color = Color.green;
 			Gizmos.matrix = thecam.transform.parent.localToWorldMatrix;
@@ -383,7 +307,6 @@ public class NewBehaviourScript : MonoBehaviour {
 			Gizmos.DrawLine(txllhc,txlrhc);
 			Gizmos.DrawLine(txurhc,txlrhc);
 			Gizmos.DrawLine(txulhc,txllhc);
-
 		}
 	}
 
@@ -418,7 +341,7 @@ public class NewBehaviourScript : MonoBehaviour {
 			Debug.Log ("Rplcmt not found");
 			Application.Quit ();
 		} else {
-			Debug.Log ("using replacement shader named " + replacementShader.name);
+			Debug.Log ("replacement shader is named " + replacementShader.name);
 		}
 
 	}
@@ -451,6 +374,8 @@ public class NewBehaviourScript : MonoBehaviour {
 	//	canvasGO = GameObject.Find ("Canvas"); // so I can turn off controlls when recording
 
 		// SetupNetwork();
+
+		theatre = GameObject.Find ("THEATRE");
 	}
 
 	// IS THIS SENSE?? DOESNT IT DESTROY TEXTURE ARRAY (TAR) WHEN I CHANGE SCENES?? seems to work ok tho..
@@ -506,12 +431,9 @@ public class NewBehaviourScript : MonoBehaviour {
 		if ((!stopMesh) || (newFov)) {
 			newFov = false;
 			for (int i = 0; i < nTot; i++) {
-
 				thecam.transform.localPosition = translations [i] - cameraSetback;			// put camera at position
 				thecam.transform.localEulerAngles = new Vector3 (translations [i].y, -translations [i].x, 0f) * toeIn;		// Dependent on Eulers being zero to start, and translations in xy, and small angles. 
-
 				commandsAfter.Clear ();
-
 				// WILL FAIL AT I > 4096. Assertion is in updateTranslations
 				if (i < 2048) {
 					commandsAfter.CopyTexture (BuiltinRenderTextureType.CameraTarget, 0, tar, i); 
@@ -524,7 +446,6 @@ public class NewBehaviourScript : MonoBehaviour {
 				} else {
 					thecam.Render ();
 				}
-
 			}
 		}
 			
@@ -533,7 +454,7 @@ public class NewBehaviourScript : MonoBehaviour {
 		thecam.transform.LookAt (2.0f * thecam.transform.position - viewingPersonsPosition.transform.position);
 
 		if (recording) {
-			string name = string.Format("{0}/{1:D04}fly.png", recordPath, Time.frameCount);
+			string name = string.Format("{0}/{1:D04}f.png", recordPath, Time.frameCount);
        		 ScreenCapture.CaptureScreenshot(name);
 		}
 
