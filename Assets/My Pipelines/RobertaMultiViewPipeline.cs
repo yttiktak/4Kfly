@@ -1,7 +1,8 @@
-﻿using UnityEngine;
-using UnityEngine.Rendering;
+﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.Experimental.Rendering;
-using Conditional = System.Diagnostics.ConditionalAttribute;
+using UnityEngine.Rendering;
+using System.Diagnostics; // is this new?? conditional wanted it.
 
 public class RobertaMultiViewPipeline : RenderPipeline {
 
@@ -57,6 +58,7 @@ public class RobertaMultiViewPipeline : RenderPipeline {
 			drawFlags |= DrawRendererFlags.EnableInstancing;
 		}
 		this.shadowMapSize = shadowMapSize;
+
 	}
 
 
@@ -69,38 +71,28 @@ public class RobertaMultiViewPipeline : RenderPipeline {
 
 		foreach (var camera in cameras) {
 
-            renderToArray = camera.CompareTag("multi-view");
+			MultiviewScript mvs = camera.GetComponent <MultiviewScript>();
+            renderToArray = ( mvs != null);
+
+
             if (renderToArray)
-            {
-                MultiviewScript mvs = camera.GetComponent < MultiviewScript> ();
-                campos = mvs.cameraPositions;
-                camorg = camera.transform.localPosition;
+			{
+				campos = mvs.cameraPositions;
+				if (campos==null) {Render(renderContext, camera);}
 
-                camera.transform.localPosition = camorg + campos[0];
-                RenderToArray(renderContext, camera, 0);
-
-                camera.transform.localPosition = camorg + campos[1];
-                RenderToArray(renderContext, camera, 1);
-
-                camera.transform.localPosition = camorg + campos[2];
-                RenderToArray(renderContext, camera, 2);
-
-
-                camera.transform.localPosition = camorg;
-                   RenderToArray(renderContext, camera, 3);
-                   RenderToArray(renderContext, camera, 4);
-                   RenderToArray(renderContext, camera, 5);
-                   RenderToArray(renderContext, camera, 6);
-                   RenderToArray(renderContext, camera, 7);
-                   RenderToArray(renderContext, camera, 8);
-                   RenderToArray(renderContext, camera, 9);
-                   RenderToArray(renderContext, camera, 10);
-                   RenderToArray(renderContext, camera, 11);
-                    if (shadowMap)
-                    {
-                        RenderTexture.ReleaseTemporary(shadowMap);
-                        shadowMap = null;
-                    }
+				camorg = camera.transform.localPosition;
+				if (PrepRender(renderContext,camera)) {
+						for (int i = 0; i < campos.Length; i++) {
+							camera.transform.localPosition = camorg + campos[i];
+							RenderToArray(renderContext, camera, i);
+						}
+						camera.transform.localPosition = camorg;
+					if (shadowMap)
+					{
+						RenderTexture.ReleaseTemporary(shadowMap);
+						shadowMap = null;
+					}
+				}
             }
             else
             {
@@ -212,15 +204,21 @@ public class RobertaMultiViewPipeline : RenderPipeline {
 		}
 	}
 
+	ScriptableCullingParameters cullingParameters;
+	bool PrepRender(ScriptableRenderContext context, Camera camera) {
+		if (!CullResults.GetCullingParameters(camera, out cullingParameters))
+		{
+			return false;
+		}
+		CullResults.Cull(ref cullingParameters, context, ref cull);
 
+
+		return true;
+	}
+
+	/*** RENDER TO ARRAY ****************/
     void RenderToArray(ScriptableRenderContext context, Camera camera, int slice)
     {
-        ScriptableCullingParameters cullingParameters;
-        if (!CullResults.GetCullingParameters(camera, out cullingParameters))
-        {
-            return;
-        }
-
 
 #if UNITY_EDITOR
         if (camera.cameraType == CameraType.SceneView)
@@ -229,7 +227,6 @@ public class RobertaMultiViewPipeline : RenderPipeline {
         }
 #endif
 
-        CullResults.Cull(ref cullingParameters, context, ref cull);
         if (cull.visibleLights.Count > 0)
         {
             ConfigureLights();
@@ -252,9 +249,11 @@ public class RobertaMultiViewPipeline : RenderPipeline {
             cameraBuffer.DisableShaderKeyword(shadowsSoftKeyword);
         }
 
+
         context.SetupCameraProperties(camera);
 
-        cameraBuffer.SetRenderTarget(camera.targetTexture, 0, CubemapFace.Unknown, slice); // TRY TO SET TO SLICE ONE OF TEX2DARRAY
+        cameraBuffer.SetRenderTarget(camera.targetTexture, 0, CubemapFace.Unknown, slice); // THE MEAT OF THE SANDWICH
+		// cameraBuffer.SetRenderTarget(renderTextures[0], 0, CubemapFace.Unknown, slice); // Bad idea. Keep rt in cameras
 
         CameraClearFlags clearFlags = camera.clearFlags;
         cameraBuffer.ClearRenderTarget(
@@ -311,6 +310,8 @@ public class RobertaMultiViewPipeline : RenderPipeline {
         context.Submit();
 
     } // END RENDER TO ARRAY
+
+
 
     void ConfigureLights () {
 		shadowTileCount = 0;

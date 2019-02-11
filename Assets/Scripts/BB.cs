@@ -224,7 +224,7 @@ public class BB {
 		int[] toss ={};
 		return MakeTranslationsIndexed (spacing, nWide, nTall, ref translations, ref toss);
 	}
-
+// pointy part up makes wrong rotation triangles!!
 	public int MakeTranslationsIndexed( float spacing, int nWide, int nTall, ref Vector3[] translations, ref int[] index) {
 		translations = null; // !!! check if already allocated, and dispose of it!!! 
 
