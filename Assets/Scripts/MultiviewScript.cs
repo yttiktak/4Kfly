@@ -6,6 +6,7 @@ public class MultiviewScript : MonoBehaviour
 {
     public Vector3[] cameraPositions;
     public int nPos = 0;
+    public RenderTexture auxCamTex;
     private void Awake()
     {
         OnValidate();

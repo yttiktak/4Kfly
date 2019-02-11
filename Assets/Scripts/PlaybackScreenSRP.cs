@@ -40,13 +40,13 @@ public class PlaybackScreenSRP : MonoBehaviour {
 
 	public bool drawMyGizmos = false; // set true to always draw the camera array frustums
 
-	public float bloomDistance = 10.0f;				// Asset blooming (big when close, small when far) is not totally set up.
+//	public float bloomDistance = 10.0f;				// Asset blooming (big when close, small when far) is not totally set up.
 
 	// public string recordPath = "/media/roberta/Seagate1/RecordedFromSlatherpi";
 
 	//	private float screenDPI;
-	public bool useReplacementShader = true;
-	Shader replacementShader = null;
+//	public bool useReplacementShader = true;
+//	Shader replacementShader = null;
 
 	public string recordPath = "";
 	public bool stopMesh = false;
@@ -56,7 +56,8 @@ public class PlaybackScreenSRP : MonoBehaviour {
 	private Vector3 txurhc,txulhc,txlrhc,txllhc; // four corners of extents of the translations array
 
 	private int nTot; // total number of viewpoints, eg cells
-	static int nMax = 2048; // 4096;
+	static int nMaxSlicesPerArray = 2048;
+	static int nMax = 4096;
 
 	private Vector3 cameraPositionZero;
 	private float cameraSetbackDistance = 0.0f;
@@ -201,13 +202,19 @@ public class PlaybackScreenSRP : MonoBehaviour {
 		theMVCamera.targetTexture.Release();
 
 		newCamTex.dimension = TextureDimension.Tex2DArray;
-		newCamTex.volumeDepth = nT;
+		newCamTex.volumeDepth = (nT>nMaxSlicesPerArray) ? nMaxSlicesPerArray : nT;
 		newCamTex.Create();
 		theMVCamera.targetTexture = newCamTex;
 
-		Vector3[] camPositions = theMVCamera.GetComponent<MultiviewScript>().cameraPositions;
-		camPositions = new Vector3[nT];
-		theMVCamera.GetComponent<MultiviewScript>().cameraPositions = camPositions;
+		if (nT>nMaxSlicesPerArray) {
+			RenderTexture auxTex = new RenderTexture(newCamTex);
+			auxTex.dimension = TextureDimension.Tex2DArray;
+			auxTex.volumeDepth = (nT>nMaxSlicesPerArray) ? nMaxSlicesPerArray : nT;
+			auxTex.Create();
+			theMVCamera.GetComponent<MultiviewScript>().auxCamTex = auxTex;
+		}
+
+		theMVCamera.GetComponent<MultiviewScript>().cameraPositions = translations;
 
 		Debug.Log("cam pos len is ");
 
@@ -258,6 +265,7 @@ public class PlaybackScreenSRP : MonoBehaviour {
 		cameraSetbackDistance = Vector3.Distance(theMVCamera.transform.parent.position+cameraSetback,cameraPositionZero);
 
 		// I check for this shader even if I have the 'use replacement shader' unchecked. Could not log if, but do.
+		/**
 		replacementShader = Shader.Find("Custom/ReplacementShader");
 		if (replacementShader == null) {
 			Debug.Log ("Rplcmt not found");
@@ -265,6 +273,7 @@ public class PlaybackScreenSRP : MonoBehaviour {
 		} else {
 			Debug.Log ("replacement shader is named " + replacementShader.name);
 		}
+		**/
 
 	}
 		

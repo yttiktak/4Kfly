@@ -44,6 +44,7 @@ public class BB {
 		oneCellUV[5] = new Vector2( 0.0333f, 0.75f);
 		oneCellUV[6] = new Vector2( 0.0333f, 0.25f);
 
+		// I think these rotate in the wrong direction
 		Vector3[] oneCellVertsFlatTop = new Vector3[7]; // ??? ok, pointy end to side for flat top.
 		oneCellVertsFlatTop[0] = new Vector3( 0.0f, 0.0f, 0.0f);
 		oneCellVertsFlatTop[1] = new Vector3( -1.0f, 0.0f, 0.0f);
@@ -285,6 +286,9 @@ public class BB {
 				ins += 1;
 			}
 		}
+		/**
+		if !pointyPartUp, sideStep.x = 0. So translations[1].x-translations[0].x = 0
+		 */
 		return nTotal;
 	}
 
