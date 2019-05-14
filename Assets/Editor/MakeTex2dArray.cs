@@ -23,17 +23,5 @@ public class MakeTex2dArray : MonoBehaviour
         AssetDatabase.CreateAsset(renderTexture, "Assets/Tex2dArray.asset");
 
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        Camera camera = gameObject.GetComponent<Camera>();
-        camera.forceIntoRenderTexture = true;
-    }
 
-    
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

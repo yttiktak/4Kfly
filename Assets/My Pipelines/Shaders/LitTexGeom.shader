@@ -11,7 +11,7 @@
 		Pass {
 			HLSLPROGRAM
 			
-			#pragma target 5.0
+			#pragma target 3.5
 			
 			#pragma multi_compile_instancing
 			#pragma instancing_options assumeuniformscaling

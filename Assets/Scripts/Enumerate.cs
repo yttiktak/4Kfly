@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class Enumerate : MonoBehaviour {
 	Mesh themesh;
-	// Use this for initialization
+	// Use this for initialization wtf??
 	[ExecuteInEditMode]
 	void Start () {
-		Vector3 vert;
 		themesh = gameObject.GetComponent<SkinnedMeshRenderer> ().sharedMesh;
 		int mlen = themesh.vertexCount;
 		Vector2[] theuvs = themesh.uv;

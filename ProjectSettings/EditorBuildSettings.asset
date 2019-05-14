@@ -5,94 +5,19 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
-  - enabled: 0
-    path: Assets/Scenes/Unused/JuneBee.unity
-    guid: 26813e9dec24d4caaa8c64592e64a041
-  - enabled: 0
-    path: Assets/Scenes/MonitorBees.unity
-    guid: 8830e9947202a429e9c21dc74b723157
-  - enabled: 0
-    path: Assets/Scenes/BeeOK2.unity
-    guid: 137f63ba502e34f63b68e5f40b6e10f0
-  - enabled: 0
-    path: Assets/NetworkHUDClient.unity
-    guid: 8778672f55e614f6998cfef0cd064039
-  - enabled: 0
-    path: Assets/WideScreenDual.unity
-    guid: f9bde74887c3b4463b670857702f2ed7
-  - enabled: 0
-    path: Assets/Scenes/NetworkHUD.unity
-    guid: 7fa55472472534be69e7bf3ac90fcd5d
-  - enabled: 0
-    path: Assets/NetworkHUDSolo.unity
-    guid: d5f1af13a6fb042da8287728cb5d488e
-  - enabled: 0
-    path: Assets/Scenes/InfinityBalls.unity
-    guid: 08c794fa3d9004f9784a2c3f6367a7b4
-  - enabled: 0
-    path: Assets/Scenes/SingleCam.unity
-    guid: a0c78a51463154124aab3282fd0f253b
-  - enabled: 0
-    path: Assets/Scenes/BeeKembra.unity
-    guid: 993c01ab3aae84a25b83f1df0347d507
-  - enabled: 0
-    path: Assets/Scenes/FinePitch/FinePitchTwo.unity
-    guid: 9302400b88f76403bbc25f4c7944d679
-  - enabled: 0
-    path: Assets/Scenes/BeeokMerge1.unity
-    guid: a56f10e4db670433889257416e29d843
-  - enabled: 0
-    path: Assets/Scenes/BeeOk.unity
-    guid: 5eee33f3244d34836bf062dca4657002
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
-  - enabled: 0
-    path: Assets/Scenes/JuneLeaf.unity
-    guid: e75f83aeb4e3d4c1f96e83a3a2687bc4
-  - enabled: 0
-    path: Assets/Scenes/WithFretboards.unity
-    guid: c699e29e466c74e93bc12e634a1fb72f
-  - enabled: 0
-    path: Assets/Scenes/JuneToFrank.unity
-    guid: 5038e15a2bad640189696c4b87e84dc7
-  - enabled: 0
-    path: Assets/Scenes/BeeEyeBreadfruit1.unity
-    guid: a22e3925fc62b4874acc44875c25db9d
-  - enabled: 0
-    path: Assets/Scenes/FinePitch/FinePitchCalibrator.unity
-    guid: 01345c440565543979ff5f08ebdeb19f
-  - enabled: 0
-    path: Assets/Scenes/FullScreenScenes/FullBees.unity
-    guid: b6b9144e55aac4c3aa6094db4fc23187
-  - enabled: 0
-    path: Assets/Scenes/FullScreenScenes/FullFrank.unity
-    guid: bc77233d3be1b4633acb9ba39226615f
-  - enabled: 0
-    path: Assets/Scenes/FullScreenScenes/Molecule.unity
-    guid: 1305e117073b1460f80ee527ea9ce281
-  - enabled: 0
-    path: Assets/Scenes/FullScreenScenes/Calibrate.unity
-    guid: 0c3a2a1373b7749e5949fd84d42b2b1f
-  - enabled: 0
-    path: Assets/Scenes/FullScreenScenes/MoleculefLAT.unity
-    guid: 4aad94369376a42128194b4ba0944ba6
-  - enabled: 0
-    path: Assets/Scenes/FullScreenScenes/MoleculeFullFlat.unity
-    guid: 0e6fc760bbdba47ea9f78222a165394d
-  - enabled: 0
-    path: Assets/Scenes/FullScreenScenes/MoleculeMovie.unity
-    guid: 3a1a07067636f41afa9ae6672ce6c1a4
   - enabled: 1
-    path: Assets/Scenes/FinePitch/FinePitchRibbons.unity
-    guid: ce630dc25f52c47bf994fe97aff9fe40
-  - enabled: 1
-    path: Assets/Scenes/FinePitch/FinePitchMolecule.unity
-    guid: 53f365e9ddd33419fba3997c9da6dc6b
-  - enabled: 1
-    path: Assets/Scenes/FinePitch/FinePitchTwoX.unity
-    guid: 15c7c9ba8aead4cc480cfb24075178b3
+    path: Assets/Scenes/SRP/beeGiant.unity
+    guid: f3b99c546c20b7480ae4e19071b92728
+  - enabled: 0
+    path: Assets/Scenes/SRP/beetex.unity
+    guid: bd59fc089814aa0288b55be13b97501a
+  - enabled: 0
+    path: Assets/Scenes/FullScreenScenes/SRP/FineTwoSRP.unity
+    guid: c3ed23548768ce9fc93e7fdd09532e4b
+  - enabled: 0
+    path: Assets/Scenes/FullScreenScenes/SRP/FrankSRP.unity
+    guid: 04ad7cbb50bffd4faba4c87f5dd0a6f4
+  - enabled: 0
+    path: Assets/Scenes/FullScreenScenes/SRP/MoleculeSRP.unity
+    guid: 954f02b33c599dae3b2a2aa05053c705
   m_configObjects: {}

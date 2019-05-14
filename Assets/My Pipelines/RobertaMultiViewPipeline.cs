@@ -44,9 +44,10 @@ public class RobertaMultiViewPipeline : RenderPipeline {
 	int shadowMapSize;
 	int shadowTileCount;
 
-    Vector3[] campos;
+    Vector3[] cameraPositions;
 
     bool renderToArray = false;
+	RenderTexture auxTex;
 
     public RobertaMultiViewPipeline( bool dynamicBatching, bool instancing, int shadowMapSize )
     {
@@ -67,7 +68,8 @@ public class RobertaMultiViewPipeline : RenderPipeline {
 		base.Render(renderContext, cameras);
 
 
-        Vector3 camorg;
+        Vector3 cameraOriginalPosition;
+		Vector3 cameraSetback;
 
 		foreach (var camera in cameras) {
 
@@ -77,16 +79,21 @@ public class RobertaMultiViewPipeline : RenderPipeline {
 
             if (renderToArray)
 			{
-				campos = mvs.cameraPositions;
-				if (campos==null) {Render(renderContext, camera);}
+				cameraPositions = mvs.cameraPositions;
+				if (cameraPositions ==null) {Render(renderContext, camera);}
 
-				camorg = camera.transform.localPosition;
-				if (PrepRender(renderContext,camera)) {
-						for (int i = 0; i < campos.Length; i++) {
-							camera.transform.localPosition = camorg + campos[i];
-							RenderToArray(renderContext, camera, i);
+				cameraSetback = mvs.CameraSetback;
+
+				cameraOriginalPosition = camera.transform.localPosition;
+				auxTex = mvs.auxCamTex; // what if it is null???
+				if (PrepRender(renderContext,mvs.viewerPositionCamera)) {
+						for (int i = 0; i < cameraPositions.Length; i++) {
+							camera.transform.localPosition = cameraOriginalPosition + cameraPositions[i] + cameraSetback;
+						//	if (PrepRender(renderContext,camera)) {
+								RenderToArray(renderContext, camera, i);
+						//	}
 						}
-						camera.transform.localPosition = camorg;
+						camera.transform.localPosition = cameraOriginalPosition;
 					if (shadowMap)
 					{
 						RenderTexture.ReleaseTemporary(shadowMap);
@@ -210,6 +217,9 @@ public class RobertaMultiViewPipeline : RenderPipeline {
 		{
 			return false;
 		}
+		// CullFlag cullFlag = cullingParameters.cullingFlags;
+
+		// cullingParameters.cullingFlags
 		CullResults.Cull(ref cullingParameters, context, ref cull);
 
 
@@ -252,7 +262,11 @@ public class RobertaMultiViewPipeline : RenderPipeline {
 
         context.SetupCameraProperties(camera);
 
-        cameraBuffer.SetRenderTarget(camera.targetTexture, 0, CubemapFace.Unknown, slice); // THE MEAT OF THE SANDWICH
+		if (slice < 2048) {
+			cameraBuffer.SetRenderTarget(camera.targetTexture, 0, CubemapFace.Unknown, slice); // THE MEAT OF THE SANDWICH
+		} else {
+			cameraBuffer.SetRenderTarget(auxTex, 0, CubemapFace.Unknown, slice-2048);
+		}
 		// cameraBuffer.SetRenderTarget(renderTextures[0], 0, CubemapFace.Unknown, slice); // Bad idea. Keep rt in cameras
 
         CameraClearFlags clearFlags = camera.clearFlags;

@@ -159,7 +159,6 @@ public class Recordator : MonoBehaviour {
 	}
 
 	void Update() {
-		Vector3 was;
 		if (Input.anyKey) {
 			if (Input.GetKey (KeyCode.LeftArrow)) {
 				sliders [XSI].value -= 0.01f;

@@ -46,6 +46,16 @@ public class PersistSceneSelectorCanvas : MonoBehaviour {
 		paused = !paused;
 	}
 
+	public void Hide(){
+		Canvas me = gameObject.GetComponent<Canvas>();
+		me.planeDistance = 500.0f; // tuck it behind everything
+	}
+
+	public void Slower()
+	{
+		Time.timeScale = Time.timeScale * 0.667f;
+	}
+
 	void Awake() {
 		DontDestroyOnLoad (gameObject);
 			

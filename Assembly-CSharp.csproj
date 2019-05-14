@@ -26,7 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <NoConfig>true</NoConfig>
@@ -59,30 +59,33 @@
      <Compile Include="Assets\My Pipelines\CLCPipelineAsset.cs" />
      <Compile Include="Assets\My Pipelines\RobertaMultiViewPipeline.cs" />
      <Compile Include="Assets\My Pipelines\RobertaPipelineAsset.cs" />
-     <Compile Include="Assets\Scripts\BB.cs" />
      <Compile Include="Assets\Scripts\Burble.cs" />
+     <Compile Include="Assets\Scripts\CanvasHider.cs" />
+     <Compile Include="Assets\Scripts\ChangeZ.cs" />
+     <Compile Include="Assets\Scripts\Core\BB.cs" />
+     <Compile Include="Assets\Scripts\Core\FlyEyeScript.cs" />
+     <Compile Include="Assets\Scripts\Core\MultiviewScript.cs" />
+     <Compile Include="Assets\Scripts\Core\PlaybackScreenSRP.cs" />
      <Compile Include="Assets\Scripts\Enumerate.cs" />
      <Compile Include="Assets\Scripts\FindAttachTexture.cs" />
-     <Compile Include="Assets\Scripts\FlyEyeScript.cs" />
-     <Compile Include="Assets\Scripts\MotionControl.cs" />
-     <Compile Include="Assets\Scripts\MultiviewScript.cs" />
-     <Compile Include="Assets\Scripts\NetworkingScript.cs" />
-     <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
      <Compile Include="Assets\Scripts\PersistSceneSelectorCanvas.cs" />
-     <Compile Include="Assets\Scripts\PlaybackScreenSRP.cs" />
      <Compile Include="Assets\Scripts\Recordator.cs" />
      <Compile Include="Assets\Scripts\ReplaceShader.cs" />
+     <Compile Include="Assets\Scripts\ReportFPS.cs" />
      <Compile Include="Assets\Scripts\Vibrate.cs" />
+     <Compile Include="Assets\THEATRE\Frank\RemapToArrays.cs" />
      <None Include="Assets\Materials\TangentWalking.shader" />
      <None Include="Assets\My Pipelines\ShaderLibrary\ShadowCaster.hlsl" />
      <None Include="Assets\Materials\NewSurfaceShader.shader" />
      <None Include="Assets\My Pipelines\Shaders\Unlit.shader" />
+     <None Include="Assets\My Pipelines\Shaders\UnlitTexLens.shader" />
      <None Include="Assets\Materials\ReplacementShader.shader" />
      <None Include="Assets\My Pipelines\ShaderLibrary\UnlitTexArray.hlsl" />
-     <None Include="Assets\Materials\Mosaic_Defaut.shader" />
-     <None Include="Assets\Materials\Mosaic_Right.shader" />
+     <None Include="Assets\Materials\Core\Mosaic_Defaut.shader" />
+     <None Include="Assets\Materials\Core\Mosaic_Right.shader" />
      <None Include="Assets\My Pipelines\Shaders\LitVertexColors.shader" />
      <None Include="Assets\My Pipelines\ShaderLibrary\LitTexture.hlsl" />
+     <None Include="Assets\My Pipelines\Shaders\UnlitTexArrayBasic.shader" />
      <None Include="Assets\My Pipelines\ShaderLibrary\LitTexArray.hlsl" />
      <None Include="Assets\My Pipelines\Shaders\LitTexArray.shader" />
      <None Include="Assets\My Pipelines\ShaderLibrary\Lit.hlsl" />
@@ -96,42 +99,20 @@
      <None Include="Assets\Materials\NewUnlitShader.shader" />
      <None Include="Assets\My Pipelines\Shaders\LitTexture.shader" />
      <None Include="Assets\My Pipelines\Shaders\UnlitTexArray.shader" />
+     <None Include="Assets\My Pipelines\ShaderLibrary\UnlitTexArrayBasic.hlsl" />
      <None Include="Assets\Materials\TryAnotherSurface.shader" />
+     <None Include="Assets\My Pipelines\ShaderLibrary\UnlitTexLens.hlsl" />
  <Reference Include="Unity.RenderPipelines.Core.Editor">
  <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.RenderPipelines.Core.Runtime">
  <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll</HintPath>
  </Reference>
- <Reference Include="Unity.RenderPipelines.Lightweight.Runtime">
- <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/ScriptAssemblies/Unity.RenderPipelines.Lightweight.Runtime.dll</HintPath>
- </Reference>
- <Reference Include="Unity.RenderPipelines.Lightweight.Editor">
- <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/ScriptAssemblies/Unity.RenderPipelines.Lightweight.Editor.dll</HintPath>
- </Reference>
  <Reference Include="Unity.PackageManagerUI.Editor">
  <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
  </Reference>
- <Reference Include="Unity.RenderPipelines.HighDefinition.Runtime">
- <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/ScriptAssemblies/Unity.RenderPipelines.HighDefinition.Runtime.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Postprocessing.Editor">
- <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Postprocessing.Runtime">
- <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/ScriptAssemblies/Unity.Postprocessing.Runtime.dll</HintPath>
- </Reference>
- <Reference Include="Unity.ShaderGraph.Editor">
- <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.RenderPipelines.HighDefinition.Editor">
- <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/ScriptAssemblies/Unity.RenderPipelines.HighDefinition.Editor.dll</HintPath>
- </Reference>
  <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
  <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/ScriptAssemblies/Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Analytics.DataPrivacy">
- <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>/home/roberta/Unity-2018.3.0f2/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -336,18 +317,6 @@
  </Reference>
  <Reference Include="UnityEngine.SpatialTracking">
  <HintPath>/home/roberta/Unity-2018.3.0f2/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditorConsuloPlugin2017.2">
- <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Assets/Plugins/UnityEditorConsuloPlugin2017.2.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Analytics.StandardEvents">
- <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Analytics.Tracker">
- <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Analytics.Editor">
- <HintPath>/home/roberta/Documents/4Kfly/SRP/4KflySRP/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>/home/roberta/Unity-2018.3.0f2/Editor/Data/MonoBleedingEdge/lib/mono/unity/mscorlib.dll</HintPath>
